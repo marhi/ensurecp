@@ -67,7 +67,14 @@ func compareHash(src, dst CopyPath) bool {
 		return false
 	}
 
-	return srcHash == dstHash
+	state := srcHash == dstHash
+
+	if state && localConfig.EnableLogging {
+		logEntry := CopyLog{string(src), string(dst), srcHash,}
+		currentLog = append(currentLog, logEntry)
+	}
+
+	return state
 }
 
 func (c CopyPath) CopyTo(dest string, verify... bool) (CopyPath, error) {
