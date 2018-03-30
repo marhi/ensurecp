@@ -2,6 +2,7 @@ package ensurecp
 
 import (
 	"encoding/json"
+	"time"
 )
 
 type EnsurecpConfig struct {
@@ -16,6 +17,8 @@ type CopyLog struct {
 	Source      string `json:"source"`
 	Destination string `json:"destionation"`
 	Hash        string `json:"hash"`
+	Timestamp   time.Time `json:"timestamp"`
+	Size        int64   `json:"size"`
 }
 
 var localConfig = EnsurecpConfig{true}

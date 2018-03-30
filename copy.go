@@ -6,17 +6,18 @@ import (
 	"io"
 	"encoding/hex"
 	"fmt"
+	"time"
 )
 
 type CopyPath string
 
-func (c CopyPath) Stat() error {
-	_, err := os.Stat(string(c))
+func (c CopyPath) Stat() (int64, error) {
+	fi, err := os.Stat(string(c))
 	if err != nil {
-		return err
+		return -1, err
 	}
 
-	return nil
+	return fi.Size(), nil
 }
 
 func (c CopyPath) GetHash() (string, error) {
@@ -69,8 +70,10 @@ func compareHash(src, dst CopyPath) bool {
 
 	state := srcHash == dstHash
 
+	size, _ := src.Stat()
+
 	if state && localConfig.EnableLogging {
-		logEntry := CopyLog{string(src), string(dst), srcHash,}
+		logEntry := CopyLog{string(src), string(dst), srcHash, time.Now().UTC(), size}
 		currentLog = append(currentLog, logEntry)
 	}
 
